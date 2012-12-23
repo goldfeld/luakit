@@ -44,6 +44,13 @@ require "window"
 -- ("$XDG_CONFIG_HOME/luakit/webview.lua" or "/etc/xdg/luakit/webview.lua")
 require "webview"
 
+webview.init_funcs.window_decision = function (view, w)
+    view:add_signal("new-window-decision", function (v, uri, reason)
+        w:new_tab(uri)
+        return true
+    end)
+end
+
 -- Load users mode configuration
 -- ("$XDG_CONFIG_HOME/luakit/modes.lua" or "/etc/xdg/luakit/modes.lua")
 require "modes"
