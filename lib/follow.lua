@@ -834,16 +834,21 @@ add_binds("ex-follow", {
             })
         end),
 
-    -- Yank element description
+    -- Append element uri or description into primary selection
     key({}, "Y", [[Hint all links (as defined by the `follow.selectors.uri`
-        selector) and set the primary selection to the matched elements URI.]],
+        selector) and append to the primary selection the matched elements URI.]],
         function (w)
             w:set_mode("follow", {
-                prompt = "yank desc", selector = "desc", evaluator = "desc",
-                func = function (desc)
-                    assert(type(desc) == "string")
-                    capi.luakit.selection.primary = desc
-                    w:notify("Yanked desc: " .. desc)
+                prompt = "yank append", selector = "uri", evaluator = "uri",
+                func = function (uri)
+                    assert(type(uri) == "string")
+										sel = capi.luakit.selection.primary
+										if sel == "" or not sel then
+											capi.luakit.selection.primary = uri
+										else
+											capi.luakit.selection.primary = sel .. "\n" .. uri
+										end
+                    w:notify("Appended: " .. uri)
                 end
             })
         end),
