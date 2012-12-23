@@ -303,6 +303,9 @@ add_binds("normal", {
     key({}, "t", "Open one or more URLs in a new tab.",
         function (w) w:enter_cmd(":tabopen ") end),
 
+    key({}, "a", "Open one or more URLs in a new tab after the current.",
+	function (w) w:enter_cmd(":tabappend ") end),
+
     key({}, "w", "Open one or more URLs in a new window.",
         function (w) w:enter_cmd(":winopen ") end),
 
@@ -523,6 +526,9 @@ add_cmds({
 
     cmd("t[abopen]", "Open one or more URLs in a new tab.",
         function (w, a) w:new_tab(w:search_open(a)) end),
+
+    cmd("taba[ppend]", "Open one or more URLs in a new tab after the current.",
+        function (w, a) w:new_tab(w:search_open(a), true, taborder.after_current) end),
 
     cmd("w[inopen]", "Open one or more URLs in a new window.",
         function (w, a) window.new{w:search_open(a)} end),
