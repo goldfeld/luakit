@@ -443,7 +443,14 @@ window.methods = {
             input.text = ""
             input:show()
             input:focus()
+
+            local lstring = lousy.util.string
+            local args = lstring.split(lstring.strip(text))
+            if args[2]
+            for i, v in pairs(args) do print(i, v) end
+
             input.text = text
+
             input.position = opts.pos or -1
         end
     end,
