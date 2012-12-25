@@ -376,8 +376,11 @@ add_binds("normal", {
     key({"Control"}, "w", "Close current tab.",
         function (w) w:close_tab() end),
 
-    key({}, "d", "Close current tab (or `[count]` tabs).",
-        function (w, m) for i=1,m.count do w:close_tab() end end, {count=1}),
+    buf("^dd$", "Close current tab (or `[count]` tabs).",
+        function (w) w:close_tab() end),
+
+    --key({}, "d", "Close current tab (or `[count]` tabs).",
+    --    function (w, m) for i=1,m.count do w:close_tab() end end, {count=1}),
 
     key({}, "<", "Reorder tab left `[count=1]` positions.",
         function (w, m)
