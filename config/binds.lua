@@ -379,6 +379,16 @@ add_binds("normal", {
     buf("^dd$", "Close current tab (or `[count]` tabs).",
         function (w) w:close_tab() end),
 
+    buf("^d[123456789]$", "Close current tab and jump to tab labeled with number.",
+        function (w, b)
+            local i = tonumber(string.sub(b, 2))
+            if w.tabs:count() < i then i = -1
+            elseif w.tabs:current() < i then i = i - 1
+            end
+            w:close_tab()
+            w:goto_tab(i)
+        end),
+
     --key({}, "d", "Close current tab (or `[count]` tabs).",
     --    function (w, m) for i=1,m.count do w:close_tab() end end, {count=1}),
 
