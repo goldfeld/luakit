@@ -377,7 +377,7 @@ add_binds("normal", {
         function (w) w:close_tab() end),
 
     buf("^dd$", "Close current tab (or `[count]` tabs).",
-        function (w) w:close_tab() end),
+        function (w, b, m) for i=1,m.count do w:close_tab() end end, {count=1}),
 
     buf("^d[123456789]$", "Close current tab and jump to tab labeled with number.",
         function (w, b)
@@ -396,9 +396,6 @@ add_binds("normal", {
                 if i ~= current then w:close_tab(w.tabs[i]) end
             end
         end),
-
-    --key({}, "d", "Close current tab (or `[count]` tabs).",
-    --    function (w, m) for i=1,m.count do w:close_tab() end end, {count=1}),
 
     key({}, "<", "Reorder tab left `[count=1]` positions.",
         function (w, m)
