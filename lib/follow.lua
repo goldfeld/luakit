@@ -327,7 +327,7 @@ stylesheet = [===[
     background-color: #000088;
     border: 1px dashed #000;
     color: #fff;
-    font-size: 10px;
+    font-size: 14px;
     font-family: monospace, courier, sans-serif;
     opacity: 0.4;
     z-index: 10002;
