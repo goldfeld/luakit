@@ -265,6 +265,10 @@ add_binds("normal", {
     key({}, "F11", "Toggle fullscreen mode.",
         function (w) w.win.fullscreen = not w.win.fullscreen end),
 
+    -- Fullscreen
+    buf("^xf$", "Toggle fullscreen mode.",
+        function (w) w.win.fullscreen = not w.win.fullscreen end),
+
     -- Clipboard
     key({}, "p", [[Open a URL based on the current primary selection contents
         in the current tab.]],
