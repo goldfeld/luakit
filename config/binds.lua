@@ -389,6 +389,14 @@ add_binds("normal", {
             w:goto_tab(i)
         end),
 
+    key({}, "D", "Close all tabs but the current.",
+        function (w)
+            local current = w.tabs:current()
+            for i = w.tabs:count(), 1, -1 do
+                if i ~= current then w:close_tab(w.tabs[i]) end
+            end
+        end),
+
     --key({}, "d", "Close current tab (or `[count]` tabs).",
     --    function (w, m) for i=1,m.count do w:close_tab() end end, {count=1}),
 
