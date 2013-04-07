@@ -72,11 +72,11 @@ function window.build()
     w.paned:pack1(w.layout)
     w.win.child = w.ebox
 
-    -- Pack tablist
-    w.layout:pack(w.tablist.widget)
-
     -- Pack notebook
     w.layout:pack(w.tabs, { expand = true, fill = true })
+
+    -- Pack tablist
+    w.layout:pack(w.tablist.widget)
 
     -- Pack left-aligned statusbar elements
     local l = w.sbar.l
@@ -455,10 +455,10 @@ window.methods = {
 
     update_win_title = function (w)
         local uri, title = w.view.uri, w.view.title
-        title = (title or "luakit") .. ((uri and " - " .. uri) or "")
+        title = (title or "Luakit") .. ((uri and " - " .. uri) or "")
         local max = globals.max_title_len or 80
         if #title > max then title = string.sub(title, 1, max) .. "..." end
-        w.win.title = title
+        w.win.title = title .. " - Luakit"
     end,
 
     update_uri = function (w, link)
