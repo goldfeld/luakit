@@ -147,6 +147,9 @@ add_binds("normal", {
     key({}, ":", "Enter `command` mode.",
         function (w) w:set_mode("command") end),
 
+    buf("^mm$", "Enter `command` mode.",
+        function (w) w:set_mode("command") end),
+
     -- Scrolling
     key({}, "j", "Scroll document down.",
         function (w) w:scroll{ yrel =  scroll_step } end),
@@ -154,10 +157,10 @@ add_binds("normal", {
     key({}, "k", "Scroll document up.",
         function (w) w:scroll{ yrel = -scroll_step } end),
 
-    key({}, "h", "Scroll document left.",
+    key({"Control"}, "h", "Scroll document left.",
         function (w) w:scroll{ xrel = -scroll_step } end),
 
-    key({}, "l", "Scroll document right.",
+    key({"Control"}, "l", "Scroll document right.",
         function (w) w:scroll{ xrel =  scroll_step } end),
 
     key({}, "Down", "Scroll document down.",
@@ -349,6 +352,13 @@ add_binds("normal", {
     key({"Shift","Control"}, "Tab", "Go to previous tab.",
         function (w) w:prev_tab() end),
 
+
+    key({}, "h", "Go to previous tab.",
+        function (w) w:prev_tab() end),
+
+    key({}, "l", "Go to next tab.",
+        function (w) w:next_tab() end),
+
     buf("^gT$", "Go to previous tab.",
         function (w) w:prev_tab() end),
 
@@ -369,8 +379,14 @@ add_binds("normal", {
     key({"Control"}, "w", "Close current tab.",
         function (w) w:close_tab() end),
 
-    key({}, "d", "Close current tab (or `[count]` tabs).",
-        function (w, m) for i=1,m.count do w:close_tab() end end, {count=1}),
+    buf("^dd$", "Close current tab.",
+        function (w) w:close_tab() end),
+
+    buf("^dh$", "Close current tab and make tab to the left active.",
+        function (w)
+          w:close_tab()
+          w:prev_tab()
+        end),
 
     key({}, "<", "Reorder tab left `[count=1]` positions.",
         function (w, m)
