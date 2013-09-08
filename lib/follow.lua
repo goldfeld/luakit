@@ -32,6 +32,35 @@ follow_js = [=[
     // Follow session state
     var state = {};
 
+    var pegwords = [
+      'saw 0', 'tie 1', 'neo 2', 'moe 3', 'ra 4',
+      'law 5', 'shoe 6', 'key 7', 'ivy 8', 'pie 9',
+      'toes 10', 'tot 11', 'dune 12', 'dam 13', 'tire 14',
+      'towel 15', 'dish 16', 'dog 17', 'dove 18', 'tap 19',
+      'nose 20', 'nut 21', 'nun 22', 'nemo 23', 'nero 24',
+      'nail 25', 'niche 26', 'nuke 27', 'knife 28', 'nib 29',
+      'mace 30', 'mead 31', 'moon 32', 'mummy 33', 'mower 34',
+      'mail 35', 'match 36', 'mug 37', 'movie 38', 'map 39',
+      'rice 40', 'root 41', 'rein 42', 'rum 43', 'rower 44',
+      'reel 45', 'roach 46', 'rogue 47', 'reef 48', 'robe 49',
+      'lasso 50', 'led 51', 'lion 52', 'lamb 53', 'lyre 54',
+      'lily 55', 'leech 56', 'log 57', 'lava 58', 'loupe 59',
+      'cheese 60', 'jet 61', 'chain 62', 'jam 63', 'chair 64',
+      'jello 65', 'judge 66', 'jug 67', 'chef 68', 'ship 69',
+      'case 70', 'cat 71', 'can 72', 'comb 73', 'car 74',
+      'coil 75', 'couch 76', 'cake 77', 'cave 78', 'cop 79',
+      'vase 80', 'foot 81', 'vine 82', 'foam 83', 'fire 84',
+      'vial 85', 'fish 86', 'fig 87', 'fifa 88', 'vip 89',
+      'bus 90', 'bat 91', 'bone 92', 'beam 93', 'pear 94',
+      'bull 95', 'patch 96', 'bike 97', 'beef 98', 'pipe 99',
+      'sauce 00', 'suit 01', 'sun 02', 'sumo 03', 'sir 04',
+      'seal 05', 'sash 06', 'sock 07', 'safe 08', 'soup 09'
+    ];
+    state.pegwords = [];
+    for (var i = 0; i < pegwords.length; i++)
+      state.pegwords.push(pegwords[i].split(' '));
+    state.pegwordslen = pegwords.length;
+
     // Unlink element from DOM (and return it)
     function unlink(e) {
         if (typeof e === "string")
@@ -223,41 +252,29 @@ follow_js = [=[
             return len;
         }
 
-        // Check if we can cut corners by checking last filter patterns
-        var last_hpat = state.last_hpat, last_tpat = state.last_tpat, hints;
-        if (last_hpat || last_tpat) {
-            // No action if new patterns equal last patterns
-            if (last_hpat === hpat && last_tpat === tpat)
-                return state.filtered.length;
-
-            // Check type hasn't changed
-            if (!!hpat === !!last_hpat && !!tpat === !!last_tpat) {
-                // If new patterns are substrings of last patterns then we can
-                // filter against the results of the last filter call
-                if ((!hpat ||
-                    hpat.substring(0, last_hpat.length) === last_hpat) &&
-                    (!tpat ||
-                    tpat.substring(0, last_tpat.length) === last_tpat)) {
-                    hints = state.filtered;
-                }
-            }
-        }
-
         // Patterns are different or it's our first run
         if (!hints)
             hints = state.hints;
 
         var hint_re = hpat && new RegExp(hpat),
             text_re = tpat && new RegExp(tpat),
-            matches = [], len = hints.length, j = 0, h;
+            matches = [], len = hints.length, j = 0, k = 0, h, parts;
 
+        var addd = "";
         // Filter hints
         for (; i < len;) {
             h = hints[i++];
-            if ((hint_re && hint_re.test(h.label)) ||
-                (text_re && text_re.test(h.text))) {
-                matches[j++] = h;
-                html += h.html;
+            k = 0;
+            for (; k < state.pegwordslen;) {
+              parts = state.pegwords[k++];
+
+              if ((hint_re && hint_re.test(parts[0]) && h.label == parts[1]) ||
+                  (text_re && text_re.test(h.text))) {
+                  addd = addd + h.label.length + " --- " + parts[1].length 
+                   + " --- " + hpat + " --- " + parts[0] + " //// ";
+                  matches[j++] = h;
+                  html += h.html;
+              }
             }
         }
 
@@ -327,7 +344,7 @@ stylesheet = [===[
     background-color: #000088;
     border: 1px dashed #000;
     color: #fff;
-    font-size: 10px;
+    font-size: 15px;
     font-family: monospace, courier, sans-serif;
     opacity: 0.4;
     z-index: 10002;
