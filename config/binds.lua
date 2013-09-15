@@ -2,6 +2,30 @@
 -- Keybindings --
 -----------------
 
+local appswitcher = ''
+local appswitcher_start = 0
+function appswitch_wait(key)
+  appswitcher = key
+  appswitcher_start = os.time()
+end
+
+function appswitch_map(key)
+  if key == 't' then return '3' end
+  if key == 'h' then return '1' end
+  if key == 'm' then return '5' end
+  if key == 'c' then return '9 && hookx 33' end
+  return ''
+end
+
+function appswitch_do()
+  if string.len(appswitcher) and os.time() - appswitcher_start <= 1 then
+    local app = appswitch_map(appswitcher)
+    if string.len(app) then os.execute('hookx ' .. app) end
+  end
+  appswitcher = ''
+  appswitcher_start = 0
+end
+
 -- Binding aliases
 local key, buf, but = lousy.bind.key, lousy.bind.buf, lousy.bind.but
 local cmd, any = lousy.bind.cmd, lousy.bind.any
@@ -145,9 +169,6 @@ add_binds("normal", {
         function (w) w:set_mode("insert")  end),
 
     key({}, ":", "Enter `command` mode.",
-        function (w) w:set_mode("command") end),
-
-    buf("^mm$", "Enter `command` mode.",
         function (w) w:set_mode("command") end),
 
     -- Scrolling
@@ -303,8 +324,35 @@ add_binds("normal", {
     key({}, "o", "Open one or more URLs.",
         function (w) w:enter_cmd(":open ") end),
 
-    key({}, "t", "Open one or more URLs in a new tab.",
-        function (w) w:enter_cmd(":tabopen ") end),
+    key({"Control"}, "m", "Switch to another application.",
+        function (w) appswitch_do() end),
+
+    key({}, "c", "Switch to Chrome",
+        function (w) appswitch_wait("c") end),
+
+    key({}, "m", "Switch to emacs",
+        function (w)
+          if appswitcher == 'm' then
+            appswitcher = ''
+            w:set_mode("command")
+          else appswitch_wait("m")
+          end
+        end),
+
+    key({}, "t", "Switch to terminal",
+        function (w) appswitch_wait("t") end),
+
+    key({}, "h", "Go to previous tab.",
+        function (w)
+          appswitch_wait("h")
+          w:prev_tab()
+        end),
+
+    key({}, "l", "Go to next tab.",
+        function (w) w:next_tab() end),
+
+    key({}, "e", "Open one or more URLs in a new tab.",
+        function (w) w:enter_cmd(":e ") end),
 
     key({}, "w", "Open one or more URLs in a new window.",
         function (w) w:enter_cmd(":winopen ") end),
@@ -312,9 +360,9 @@ add_binds("normal", {
     key({}, "O", "Open one or more URLs based on current location.",
         function (w) w:enter_cmd(":open " .. (w.view.uri or "")) end),
 
-    key({}, "T",
+    key({}, "E",
         "Open one or more URLs based on current location in a new tab.",
-        function (w) w:enter_cmd(":tabopen " .. (w.view.uri or "")) end),
+        function (w) w:enter_cmd(":e " .. (w.view.uri or "")) end),
 
     key({}, "W",
         "Open one or more URLs based on current locaton in a new window.",
@@ -352,12 +400,6 @@ add_binds("normal", {
     key({"Shift","Control"}, "Tab", "Go to previous tab.",
         function (w) w:prev_tab() end),
 
-
-    key({}, "h", "Go to previous tab.",
-        function (w) w:prev_tab() end),
-
-    key({}, "l", "Go to next tab.",
-        function (w) w:next_tab() end),
 
     buf("^gT$", "Go to previous tab.",
         function (w) w:prev_tab() end),
@@ -504,6 +546,9 @@ add_cmds({
             end
         end),
 
+    key({"Control"}, "m",
+        function (w) w:activate() end),
+
     cmd("c[lose]", "Close current tab.",
         function (w) w:close_tab() end),
 
@@ -538,6 +583,9 @@ add_cmds({
         function (w, a) w:navigate(w:search_open(a)) end),
 
     cmd("t[abopen]", "Open one or more URLs in a new tab.",
+        function (w, a) w:new_tab(w:search_open(a)) end),
+
+    cmd("e[dit]", "Open one or more URLs in a new tab.",
         function (w, a) w:new_tab(w:search_open(a)) end),
 
     cmd("w[inopen]", "Open one or more URLs in a new window.",
