@@ -450,10 +450,10 @@ add_binds("normal", {
     buf("^gy$", "Duplicate current tab.",
         function (w) w:new_tab(w.view.history or "") end),
 
-    key({}, "r", "Reload current tab.",
+    key({"Control"}, "r", "Reload current tab.",
         function (w) w:reload() end),
 
-    key({}, "R", "Reload current tab (skipping cache).",
+    key({"Shift","Control"}, "r", "Reload current tab (skipping cache).",
         function (w) w:reload(true) end),
 
     key({"Control"}, "c", "Stop loading the current tab.",
