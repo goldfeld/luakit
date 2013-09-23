@@ -11,16 +11,16 @@ end
 
 function appswitch_map(key)
   if key == 't' then return '3' end
-  if key == 'h' then return '1' end
+  if key == 'c' then return '1' end
   if key == 'm' then return '5' end
-  if key == 'c' then return '9 && hookx 33' end
+  if key == 'r' then return '9 && hooker 33' end
   return ''
 end
 
 function appswitch_do()
   if string.len(appswitcher) and os.time() - appswitcher_start <= 1 then
     local app = appswitch_map(appswitcher)
-    if string.len(app) then os.execute('hookx ' .. app) end
+    if string.len(app) then os.execute('hooker ' .. app) end
   end
   appswitcher = ''
   appswitcher_start = 0
@@ -327,8 +327,8 @@ add_binds("normal", {
     key({"Control"}, "m", "Switch to another application.",
         function (w) appswitch_do() end),
 
-    key({}, "c", "Switch to Chrome",
-        function (w) appswitch_wait("c") end),
+    key({}, "r", "Switch to Chrome",
+        function (w) appswitch_wait("r") end),
 
     key({}, "m", "Switch to emacs",
         function (w)
@@ -339,7 +339,10 @@ add_binds("normal", {
           end
         end),
 
-    key({}, "t", "Switch to terminal",
+    key({}, "c", "Switch to terminal",
+        function (w) appswitch_wait("c") end),
+
+    key({}, "t", "Switch to vim",
         function (w) appswitch_wait("t") end),
 
     key({}, "h", "Go to previous tab.",
