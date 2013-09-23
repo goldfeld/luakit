@@ -427,6 +427,14 @@ add_binds("normal", {
     buf("^dd$", "Close current tab.",
         function (w) w:close_tab() end),
 
+    buf("^di$", "Close current tab, saving to inbox.",
+        function (w)
+          local inbox = io.open("/home/vic/goldfeld/.tnt/inbox.tnt", "a")
+          inbox:write("[" .. w.view.title .. "](" .. w.view.uri .. ")\n")
+          io.close(inbox)
+          w:close_tab()
+        end),
+
     buf("^dh$", "Close current tab and make tab to the left active.",
         function (w)
           w:close_tab()
