@@ -636,6 +636,10 @@ add_cmds({
     cmd({"wqall", "wq"}, "Save the session and quit.",
         function (w, a, o) w:save_session() w:close_win(o.bang) end),
 
+    cmd("!", "Execute bash command.", function (w, a)
+        if a then os.execute(a) end
+    end),
+
     cmd("lua", "Evaluate Lua snippet.", function (w, a)
         if a then
             local ret = assert(
